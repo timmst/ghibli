@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 
-const Locations = () => {
+const Vehicles = () => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [locations, setLocations] = useState([]);
+  const [vehicles, setVehicles] = useState([]);
 
   useEffect(() => {
-    fetch("https://ghibliapi.herokuapp.com/locations")
+    fetch("https://ghibliapi.herokuapp.com/vehicles")
       .then((res) => res.json())
       .then(
         (result) => {
           setIsLoaded(true);
-          setLocations(result);
+          setVehicles(result);
         },
         (error) => {
           setIsLoaded(true);
@@ -27,9 +27,9 @@ const Locations = () => {
   } else {
     return (
       <ul>
-        {locations.map((location) => (
-          <li key={location.id}>
-            {location.name} {location.terrain}
+        {vehicles.map((vehicle) => (
+          <li key={vehicle.id}>
+            {vehicle.name} {vehicle.age}
           </li>
         ))}
       </ul>
@@ -37,4 +37,4 @@ const Locations = () => {
   }
 };
 
-export default Locations;
+export default Vehicles;

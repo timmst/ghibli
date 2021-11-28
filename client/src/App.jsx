@@ -1,24 +1,31 @@
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
-import { Route, Routes } from 'react-router-dom';
-import People from "./routes/People"
-import Locations from "./routes/Locations"
+import { Route, Routes } from "react-router-dom";
+import People from "./routes/People";
+import Locations from "./routes/Locations";
 import Home from "./routes/Home";
+import "./App.css";
+import Vehicles from "./routes/Vehicles";
 
 function App() {
   return (
-  <div className='App'>
+    <div
+      className="App"
+      style={{
+        alignItems: "center",
+      }}
+    >
       <Navbar />
       <Routes>
-              <Route exact path="/" element={<Home />} />
-              <Route path="/people" element={<People />} />
-              <Route path="/locations" element={<Locations />} />
-              <Route path="/" render={() => <div>404</div>} />
-            </Routes>
-            {/* <div className='w-100 d-flex justify-content-center '>
-				<Footer />
-			</div> */}
-  </div>
+        <Route exact path="/" element={<Home />} />
+        <Route path="/people" element={<People />} />
+        <Route path="/locations" element={<Locations />} />
+        <Route path="/vehicles" element={<Vehicles />} />
+        <Route path="/" render={() => <div>404</div>} />
+      </Routes>
+      <div style={{ flexGrow: 1 }}></div>
+      <Footer />
+    </div>
   );
 }
 
