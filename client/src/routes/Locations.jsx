@@ -1,4 +1,6 @@
+import React from "react";
 import { useState, useEffect } from "react";
+import { Grid, Card, CardContent, Typography } from "@mui/material";
 
 const Locations = () => {
   const [error, setError] = useState(null);
@@ -26,13 +28,38 @@ const Locations = () => {
     return <div>Loading...</div>;
   } else {
     return (
-      <ul>
-        {locations.map((location) => (
-          <li key={location.id}>
-            {location.name} {location.terrain}
-          </li>
-        ))}
-      </ul>
+      <React.Fragment>
+        <Grid container spacing={2}>
+          {locations.map((location) => (
+            <Grid item key={location.id} xs={8} sm={6} md={3}>
+              <Card variant="outlined">
+                <CardContent>
+                  <Typography
+                    sx={{ fontSize: 14 }}
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    {location.original_title}
+                  </Typography>
+                  <Typography variant="h5" component="div">
+                    {location.name}
+                  </Typography>
+                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                    {location.climate} climate
+                  </Typography>
+                  <Typography sx={{ mb: 1.5 }} variant="body2">
+                    Appears in {location.films}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {location.terrain} {"terrain"} {"•"}{" "}
+                    {location.surface_water} surface water
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </React.Fragment>
     );
   }
 };
