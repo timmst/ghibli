@@ -12,7 +12,7 @@ const FooterContainer = styled("div")({
   bottom: "0",
   height: "10px",
   color: "#FFFFFF",
-  backgroundColor: "#2A3942",
+  backgroundColor: "#333333",
   fontSize: 20,
   fontFamily: "Roboto",
   marginTop: "auto",

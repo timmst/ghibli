@@ -7,7 +7,7 @@ import { Link as RouterLink } from "react-router-dom";
 export default function Navbar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" sx={{ bgcolor: "#2A3942" }}>
+      <AppBar position="fixed" sx={{ bgcolor: "#333333" }}>
         <Toolbar>
           <Link
             component={RouterLink}
