@@ -8,6 +8,27 @@ const Home = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [films, setFilms] = useState([]);
 
+  function randomColor() {
+    const colors = [
+      "#CD9B9B",
+      "#FF8247",
+      "#EEDD82",
+      "#CDE472",
+      "#ff7251",
+      "#ffca7b",
+      "#ffcd74",
+      "#ffedbf",
+      "#7DB08D",
+      "#B98AAA",
+      "#9DB6C6",
+      "#F5D3C6",
+      "#CFF5CD",
+      "#BFE3EC",
+    ];
+    let randomColor = colors[Math.floor(Math.random() * colors.length)];
+    return randomColor;
+  }
+
   useEffect(() => {
     fetch("https://ghibliapi.herokuapp.com/films")
       .then((res) => res.json())
@@ -37,6 +58,7 @@ const Home = () => {
               <Card
                 variant="outlined"
                 sx={{
+                  backgroundColor: randomColor(),
                   boxShadow: "2px 4px 25px rgba(0, 0, 0, .1)",
                   borderRadius: "12px",
                   transition: "all .2s linear",
