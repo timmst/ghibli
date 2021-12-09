@@ -2,32 +2,12 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Grid, Card, CardContent, Typography } from "@mui/material";
 import Image from "../components/Image";
+import { randomColor } from "../utils/randomColor";
 
 const Home = () => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [films, setFilms] = useState([]);
-
-  function randomColor() {
-    const colors = [
-      "#CD9B9B",
-      "#FF8247",
-      "#EEDD82",
-      "#CDE472",
-      "#ff7251",
-      "#ffca7b",
-      "#ffcd74",
-      "#ffedbf",
-      "#7DB08D",
-      "#B98AAA",
-      "#9DB6C6",
-      "#F5D3C6",
-      "#CFF5CD",
-      "#BFE3EC",
-    ];
-    let randomColor = colors[Math.floor(Math.random() * colors.length)];
-    return randomColor;
-  }
 
   useEffect(() => {
     fetch("https://ghibliapi.herokuapp.com/films")
@@ -82,7 +62,10 @@ const Home = () => {
                   <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     {film.release_date} {"•"} Directed by {film.director}
                   </Typography>
-                  <Typography sx={{ mb: 1.5 }} variant="body2">
+                  <Typography
+                    sx={{ mb: 1.5, lineHeight: "1.6" }}
+                    variant="body2"
+                  >
                     {film.description}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
