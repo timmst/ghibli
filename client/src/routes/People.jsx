@@ -1,5 +1,4 @@
 import {
-  IconButton,
   MenuItem,
   Paper,
   Select,
@@ -11,17 +10,17 @@ import {
   TablePagination,
   TableRow,
   Toolbar,
-  Tooltip,
 } from "@mui/material";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import React, { useEffect, useState } from "react";
-// import { useFetch } from "../utils/useFetch";
+import { useFetch } from "../utils/useFetch";
 
 const People = () => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [people, setPeople] = useState([]);
   const [peopleCopy, setPeopleCopy] = useState([]);
+  const [films, setFilms] = useState([]);
+  const [filmsCopy, setFilmsCopy] = useState([]);
   // const { data, err, loading } = useFetch(
   //   "https://ghibliapi.herokuapp.com/films"
   // );
@@ -118,56 +117,67 @@ const People = () => {
     if (value !== "All") {
       filterList = [value];
     }
-    console.log("filteredCols", filteredCols);
     // Target the column to filter on.
     filteredCols[0].options.filterList = filterList;
-    console.log("filterList", filterList);
     setCols(filteredCols);
-    const _filteredPeople = peopleCopy.filter((person) => {
-      return person.name === filterList[0];
-    });
-    console.log("_filteredPeople", _filteredPeople);
+
     if (value === "All") {
       setPeople(peopleCopy);
-      console.log("setPeopleCopy", peopleCopy);
     } else {
-      setPeople(_filteredPeople);
-      console.log("set_FilteredPeople", _filteredPeople);
+      const filmId = filmsCopy.filter((film) => film.title === filterList[0])[0]
+        .id;
+
+      async function fetchPeopleOfFilm(filmId) {
+        try {
+          let response = await fetch(
+            `https://ghibliapi.herokuapp.com/films/${filmId}`
+          );
+          let film = await response.json();
+          const peopleUrls = film.people;
+          // return people with corresponding urls
+          const peopleObjs = peopleCopy.filter((el) =>
+            peopleUrls.includes(el.url)
+          );
+          // const thePeople = peopleObjs.map((person) => person.name);
+          // return thePeople;
+          return peopleObjs;
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      // get people objects for selected film and update state
+      async function getPeople() {
+        const filteredPeople = await fetchPeopleOfFilm(filmId);
+        setPeople(filteredPeople);
+      }
+      getPeople();
     }
   };
 
-  // const onFilter = ({ target: { value } }) => {
-  //   setSelectedFilter(value);
-  //   const filteredCols = [...cols];
-  //   let filterList = [];
-  //   if (value !== "All") {
-  //     filterList = [value];
-  //   }
-  //   console.log(filteredCols);
-  //   // Target the column to filter on.
-  //   filteredCols[0].options.filterList = filterList;
-  //   setCols(filteredCols);
-  // };
-
-  // console.log({ data, err, loading });
-  //https://ghibliapi.herokuapp.com/films
-  // const films = data.filter(film => film === people.)
-
   useEffect(() => {
-    fetch("https://ghibliapi.herokuapp.com/people")
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setPeople(result);
-          setPeopleCopy(result);
-          console.log("peopelCopy", peopleCopy);
-        },
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      );
+    Promise.all([
+      fetch("https://ghibliapi.herokuapp.com/people"),
+      fetch("https://ghibliapi.herokuapp.com/films"),
+    ])
+      .then(async ([peopleResponse, filmsResponse]) => {
+        const resolvedPeople = await peopleResponse.json(); // await response object from resolved request
+        const resolvedFilms = await filmsResponse.json(); // .jsoon() is async and returns a promise with a resolved body content
+        setFilms(resolvedFilms);
+        setFilmsCopy(resolvedFilms);
+        setPeople(resolvedPeople);
+        setPeopleCopy(resolvedPeople);
+        return [resolvedPeople, resolvedFilms];
+      })
+      .then((responseText) => {
+        setIsLoaded(true);
+        console.log("responsetext", responseText);
+      })
+      .catch((err) => {
+        setIsLoaded(true);
+        setError(error);
+        console.error(err);
+      });
   }, []);
 
   if (error) {
@@ -175,21 +185,15 @@ const People = () => {
   } else if (!isLoaded) {
     return <div>Loading...</div>;
   } else {
-    // people.forEach(function (elem) {
-    //   if ((elem.name = "Haku")) {
-    //     console.log("test", elem.name);
-    //   }
-    // });
-
     return (
       <React.Fragment>
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
-          <Toolbar>
+          <Toolbar sx={{ alignContent: "left" }}>
             <Select onChange={onFilter} value={selectedFilter}>
               <MenuItem value="All">All</MenuItem>
-              {peopleCopy.map((x) => (
-                <MenuItem key={x.name} value={x.name}>
-                  {x.name}
+              {filmsCopy.map((x) => (
+                <MenuItem key={x.title} value={x.title}>
+                  {x.title}
                 </MenuItem>
               ))}
             </Select>
