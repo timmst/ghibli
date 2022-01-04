@@ -5,7 +5,6 @@ import People from "./routes/People";
 import Locations from "./routes/Locations";
 import Home from "./routes/Home";
 import "./App.css";
-import Vehicles from "./routes/Vehicles";
 
 function App() {
   return (
@@ -20,7 +19,6 @@ function App() {
         <Route exact path="/" element={<Home />} />
         <Route path="/people" element={<People />} />
         <Route path="/locations" element={<Locations />} />
-        <Route path="/vehicles" element={<Vehicles />} />
         <Route path="/" render={() => <div>404</div>} />
       </Routes>
       <div style={{ flexGrow: 1 }}></div>
