@@ -12,7 +12,7 @@ import {
   Toolbar,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useFetch } from "../utils/useFetch";
+import Person from "../components/Person";
 
 const People = () => {
   const [error, setError] = useState(null);
@@ -21,6 +21,7 @@ const People = () => {
   const [peopleCopy, setPeopleCopy] = useState([]);
   const [films, setFilms] = useState([]);
   const [filmsCopy, setFilmsCopy] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
   // const { data, err, loading } = useFetch(
   //   "https://ghibliapi.herokuapp.com/films"
   // );
@@ -98,7 +99,7 @@ const People = () => {
       const person = people.find((person) => person.name === cell);
       console.log("person", person);
       if (person) {
-        console.log("A name was clicked!", person.species);
+        console.log("A name was clicked!", person);
       }
     }
   };
@@ -187,6 +188,8 @@ const People = () => {
   } else {
     return (
       <React.Fragment>
+        {openModal && <Person closeModal={setOpenModal} />}
+
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
           <Toolbar sx={{ alignContent: "left" }}>
             <Select onChange={onFilter} value={selectedFilter}>
@@ -228,10 +231,17 @@ const People = () => {
                         role="checkbox"
                         tabIndex={-1}
                         key={row.id}
-                        onClick={() => {
-                          console.log("onClick of row");
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          console.log("onClick of row ", row);
+                          setOpenModal(true);
+                          console.log("openModalWasSetTo", openModal);
+                          // only open modal if value is true
+                          openModal && <Person closeModal={setOpenModal} />;
                         }}
                       >
+                        {/* {openModal && <Person closeModal={setOpenModal} />} */}
+
                         {columns.map((column) => {
                           const value = row[column.id];
                           return (
