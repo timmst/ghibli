@@ -22,6 +22,7 @@ const People = () => {
   const [films, setFilms] = useState([]);
   const [filmsCopy, setFilmsCopy] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [rowData, setRowData] = useState({});
   // const { data, err, loading } = useFetch(
   //   "https://ghibliapi.herokuapp.com/films"
   // );
@@ -97,9 +98,10 @@ const People = () => {
   const clickable = (cell) => {
     if (cell) {
       const person = people.find((person) => person.name === cell);
-      console.log("person", person);
       if (person) {
         console.log("A name was clicked!", person);
+      } else {
+        console.log("Another cell was clicked");
       }
     }
   };
@@ -188,7 +190,13 @@ const People = () => {
   } else {
     return (
       <React.Fragment>
-        {openModal && <Person closeModal={setOpenModal} />}
+        {openModal && (
+          <Person
+            row={rowData}
+            modalState={openModal}
+            closeModal={setOpenModal}
+          />
+        )}
 
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
           <Toolbar sx={{ alignContent: "left" }}>
@@ -232,12 +240,16 @@ const People = () => {
                         tabIndex={-1}
                         key={row.id}
                         onClick={(event) => {
-                          event.stopPropagation();
-                          console.log("onClick of row ", row);
+                          setRowData(row);
                           setOpenModal(true);
-                          console.log("openModalWasSetTo", openModal);
-                          // only open modal if value is true
-                          openModal && <Person closeModal={setOpenModal} />;
+                          // only open modal if state was set to true
+                          openModal && (
+                            <Person
+                              rowData={rowData}
+                              modalState={openModal}
+                              closeModal={setOpenModal}
+                            />
+                          );
                         }}
                       >
                         {/* {openModal && <Person closeModal={setOpenModal} />} */}

@@ -13,14 +13,16 @@ const style = {
   p: 4,
 };
 
-const Person = ({ closeModal }) => {
+const Person = (props) => {
   // const [open, setOpen] = React.useState(false);
-  // const handleOpen = () => setOpen(true);
-  const handleClose = () => closeModal(false);
-  console.log("this is in Person.jsx", closeModal);
+  console.log("props", props);
+  const handleOpen = () => props.closeModal(true);
+  const handleClose = () => props.closeModal(false);
   return (
     <Modal
-      open={closeModal}
+      // open={props.closeModal}
+      open={props.modalState}
+      // open={handleOpen}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
