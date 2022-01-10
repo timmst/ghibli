@@ -123,6 +123,8 @@ const People = () => {
     filteredCols[0].options.filterList = filterList;
     setCols(filteredCols);
 
+    setPage(0);
+
     if (value === "All") {
       setPeople(peopleRef.current);
     } else {
