@@ -18,21 +18,17 @@ const People = () => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [people, setPeople] = useState([]);
-  const [peopleCopy, setPeopleCopy] = useState([]);
   const [films, setFilms] = useState([]);
-  const [filmsCopy, setFilmsCopy] = useState([]);
   const [openModal, setOpenModal] = useState(false);
-  // const { data, err, loading } = useFetch(
-  //   "https://ghibliapi.herokuapp.com/films"
-  // );
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const rowData = useRef({});
   const peopleRef = useRef([]);
   const filmsRef = useRef([]);
+  const rowData = useRef({});
 
   const handleChangePage = (event, newPage) => {
+    console.log("newPage", newPage);
     setPage(newPage);
   };
 
@@ -128,13 +124,11 @@ const People = () => {
     setCols(filteredCols);
 
     if (value === "All") {
-      setPeople(peopleCopy);
-      // setPeople(peopleRef);
+      setPeople(peopleRef.current);
     } else {
-      const filmId = filmsCopy.filter((film) => film.title === filterList[0])[0]
-        .id;
-      // const filmId = filmsRef.filter((film) => film.title === filterList[0])[0]
-      // .id;
+      const filmId = filmsRef.current.filter(
+        (film) => film.title === filterList[0]
+      )[0].id;
 
       async function fetchPeopleOfFilm(filmId) {
         try {
@@ -144,12 +138,9 @@ const People = () => {
           let film = await response.json();
           const peopleUrls = film.people;
           // return people with corresponding urls
-          const peopleObjs = peopleCopy.filter((el) =>
+          const peopleObjs = peopleRef.current.filter((el) =>
             peopleUrls.includes(el.url)
           );
-          // const peopleObjs = peopleRef.filter((el) =>
-          //   peopleUrls.includes(el.url)
-          // );
           return peopleObjs;
         } catch (error) {
           console.error(error);
@@ -174,11 +165,9 @@ const People = () => {
         const resolvedPeople = await peopleResponse.json(); // await response object from resolved request
         const resolvedFilms = await filmsResponse.json(); // .jsoon() is async and returns a promise with a resolved body content
         setFilms(resolvedFilms);
-        setFilmsCopy(resolvedFilms);
-        // const filmsRef = resolvedFilms;
+        filmsRef.current = resolvedFilms;
         setPeople(resolvedPeople);
-        setPeopleCopy(resolvedPeople);
-        // const peopleRef = resolvedPeople;
+        peopleRef.current = resolvedPeople;
         return [resolvedPeople, resolvedFilms];
       })
       .then((responseText) => {
@@ -211,7 +200,7 @@ const People = () => {
           <Toolbar sx={{ alignContent: "left" }}>
             <Select onChange={onFilter} value={selectedFilter}>
               <MenuItem value="All">All</MenuItem>
-              {filmsCopy.map((x) => (
+              {filmsRef.current.map((x) => (
                 <MenuItem key={x.title} value={x.title}>
                   {x.title}
                 </MenuItem>
