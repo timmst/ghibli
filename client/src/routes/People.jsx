@@ -11,7 +11,7 @@ import {
   TableRow,
   Toolbar,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Person from "../components/Person";
 
 const People = () => {
@@ -22,12 +22,15 @@ const People = () => {
   const [films, setFilms] = useState([]);
   const [filmsCopy, setFilmsCopy] = useState([]);
   const [openModal, setOpenModal] = useState(false);
-  const [rowData, setRowData] = useState({});
   // const { data, err, loading } = useFetch(
   //   "https://ghibliapi.herokuapp.com/films"
   // );
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const rowData = useRef({});
+  const peopleRef = useRef([]);
+  const filmsRef = useRef([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -126,9 +129,12 @@ const People = () => {
 
     if (value === "All") {
       setPeople(peopleCopy);
+      // setPeople(peopleRef);
     } else {
       const filmId = filmsCopy.filter((film) => film.title === filterList[0])[0]
         .id;
+      // const filmId = filmsRef.filter((film) => film.title === filterList[0])[0]
+      // .id;
 
       async function fetchPeopleOfFilm(filmId) {
         try {
@@ -141,8 +147,9 @@ const People = () => {
           const peopleObjs = peopleCopy.filter((el) =>
             peopleUrls.includes(el.url)
           );
-          // const thePeople = peopleObjs.map((person) => person.name);
-          // return thePeople;
+          // const peopleObjs = peopleRef.filter((el) =>
+          //   peopleUrls.includes(el.url)
+          // );
           return peopleObjs;
         } catch (error) {
           console.error(error);
@@ -168,8 +175,10 @@ const People = () => {
         const resolvedFilms = await filmsResponse.json(); // .jsoon() is async and returns a promise with a resolved body content
         setFilms(resolvedFilms);
         setFilmsCopy(resolvedFilms);
+        // const filmsRef = resolvedFilms;
         setPeople(resolvedPeople);
         setPeopleCopy(resolvedPeople);
+        // const peopleRef = resolvedPeople;
         return [resolvedPeople, resolvedFilms];
       })
       .then((responseText) => {
@@ -240,7 +249,8 @@ const People = () => {
                         tabIndex={-1}
                         key={row.id}
                         onClick={(event) => {
-                          setRowData(row);
+                          rowData.current = row;
+                          console.log(rowData);
                           setOpenModal(true);
                           // only open modal if state was set to true
                           openModal && (
