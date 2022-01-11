@@ -28,7 +28,6 @@ const People = () => {
   const rowData = useRef({});
 
   const handleChangePage = (event, newPage) => {
-    console.log("newPage", newPage);
     setPage(newPage);
   };
 
@@ -192,7 +191,7 @@ const People = () => {
       <React.Fragment>
         {openModal && (
           <Person
-            row={rowData}
+            row={rowData.current}
             modalState={openModal}
             closeModal={setOpenModal}
           />
@@ -241,12 +240,11 @@ const People = () => {
                         key={row.id}
                         onClick={(event) => {
                           rowData.current = row;
-                          console.log(rowData);
                           setOpenModal(true);
                           // only open modal if state was set to true
                           openModal && (
                             <Person
-                              rowData={rowData}
+                              rowData={rowData.current}
                               modalState={openModal}
                               closeModal={setOpenModal}
                             />
