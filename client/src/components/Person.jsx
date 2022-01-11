@@ -1,5 +1,6 @@
-import { Modal, Box, Typography, Button, Card as MuiCard } from "@mui/material";
+import { Modal, Box, Typography, Paper } from "@mui/material";
 import * as React from "react";
+import { useFetch } from "../utils/useFetch";
 
 const style = {
   position: "absolute",
@@ -18,21 +19,41 @@ const Person = (props) => {
   console.log("props", props);
   const handleOpen = () => props.closeModal(true);
   const handleClose = () => props.closeModal(false);
+  const movie = useFetch(props.row.films[0]);
+  console.log("movie", movie);
   return (
     <Modal
-      // open={props.closeModal}
       open={props.modalState}
-      // open={handleOpen}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Text in a modal
+        <Typography
+          id="modal-modal-title"
+          variant="h6"
+          component="h2"
+          textAlign={"center"}
+          sx={{
+            fontWeight: "bold",
+            fontSize: "20pt",
+            fontFamily: "Rubik",
+          }}
+        >
+          {props.row.name}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+          {/* {movie.response ? movie.response.title : "movie unavailable"} */}
+          {movie.response && (
+            <Paper
+              sx={{
+                margin: "1rem auto",
+                boxShadow: "none",
+              }}
+            >
+              <img alt="missing" src={movie.response.image} width="400px" />
+            </Paper>
+          )}
         </Typography>
       </Box>
     </Modal>
