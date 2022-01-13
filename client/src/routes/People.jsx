@@ -18,7 +18,6 @@ const People = () => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [people, setPeople] = useState([]);
-  const [films, setFilms] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -97,9 +96,8 @@ const People = () => {
     if (cell) {
       const person = people.find((person) => person.name === cell);
       if (person) {
-        console.log("A name was clicked!", person);
+        // do something with person object
       } else {
-        console.log("Another cell was clicked");
       }
     }
   };
@@ -122,6 +120,7 @@ const People = () => {
     filteredCols[0].options.filterList = filterList;
     setCols(filteredCols);
 
+    // Go back to first page
     setPage(0);
 
     if (value === "All") {
@@ -131,7 +130,7 @@ const People = () => {
         (film) => film.title === filterList[0]
       )[0].id;
 
-      async function fetchPeopleOfFilm(filmId) {
+      async function fetchFilmPeople(filmId) {
         try {
           let response = await fetch(
             `https://ghibliapi.herokuapp.com/films/${filmId}`
@@ -144,13 +143,13 @@ const People = () => {
           );
           return peopleObjs;
         } catch (error) {
-          console.error(error);
+          // error handling
         }
       }
 
       // get people objects for selected film and update state
       async function getPeople() {
-        const filteredPeople = await fetchPeopleOfFilm(filmId);
+        const filteredPeople = await fetchFilmPeople(filmId);
         setPeople(filteredPeople);
       }
       getPeople();
@@ -165,7 +164,7 @@ const People = () => {
       .then(async ([peopleResponse, filmsResponse]) => {
         const resolvedPeople = await peopleResponse.json(); // await response object from resolved request
         const resolvedFilms = await filmsResponse.json(); // .jsoon() is async and returns a promise with a resolved body content
-        setFilms(resolvedFilms);
+        // setFilms(resolvedFilms);
         filmsRef.current = resolvedFilms;
         setPeople(resolvedPeople);
         peopleRef.current = resolvedPeople;
@@ -173,13 +172,13 @@ const People = () => {
       })
       .then((responseText) => {
         setIsLoaded(true);
-        console.log("responsetext", responseText);
+        // console.log("responsetext", responseText); // contains array of people and films
       })
       .catch((err) => {
         setIsLoaded(true);
         setError(error);
-        console.error(err);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (error) {
@@ -238,7 +237,7 @@ const People = () => {
                         role="checkbox"
                         tabIndex={-1}
                         key={row.id}
-                        onClick={(event) => {
+                        onClick={() => {
                           rowData.current = row;
                           setOpenModal(true);
                           // only open modal if state was set to true
@@ -251,8 +250,6 @@ const People = () => {
                           );
                         }}
                       >
-                        {/* {openModal && <Person closeModal={setOpenModal} />} */}
-
                         {columns.map((column) => {
                           const value = row[column.id];
                           return (
