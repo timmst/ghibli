@@ -15,10 +15,8 @@ const style = {
 };
 
 const Person = (props) => {
-  console.log("props", props);
   const handleClose = () => props.closeModal(false);
   const movie = useFetch(props.row.films[0]);
-  console.log("movie", movie);
   return (
     <Modal
       open={props.modalState}
