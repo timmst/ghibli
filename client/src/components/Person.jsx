@@ -15,9 +15,7 @@ const style = {
 };
 
 const Person = (props) => {
-  // const [open, setOpen] = React.useState(false);
   console.log("props", props);
-  const handleOpen = () => props.closeModal(true);
   const handleClose = () => props.closeModal(false);
   const movie = useFetch(props.row.films[0]);
   console.log("movie", movie);
@@ -46,6 +44,8 @@ const Person = (props) => {
           {/* {movie.response ? movie.response.title : "movie unavailable"} */}
           {movie.response && (
             <Paper
+              component={"span"}
+              variant={"body2"}
               sx={{
                 margin: "1rem auto",
                 boxShadow: "none",
