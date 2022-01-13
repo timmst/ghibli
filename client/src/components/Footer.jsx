@@ -1,4 +1,5 @@
 import { styled } from "@mui/material/styles";
+import githubIcon from "../assets/github120.png";
 
 const FooterContainer = styled("div")({
   display: "flex",
@@ -19,7 +20,15 @@ const FooterContainer = styled("div")({
 });
 
 const Footer = () => {
-  return <FooterContainer>Made by timmst</FooterContainer>;
+  return (
+    <FooterContainer>
+      <div>
+        <a href="https://github.com/timmst/ghibli" title="GitHub">
+          <img alt="missing" src={githubIcon} width="30px" />
+        </a>
+      </div>
+    </FooterContainer>
+  );
 };
 
 export default Footer;
