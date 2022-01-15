@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Grid, Card, CardContent, Typography } from "@mui/material";
+import { Grid, Card, CardContent, Typography, CardHeader } from "@mui/material";
 import Image from "../components/Image";
 import { randomColor } from "../utils/randomColor";
 
@@ -14,6 +14,13 @@ const Home = () => {
       .then((res) => res.json())
       .then(
         (result) => {
+          result.map(
+            (film) =>
+              (film.description = film.description.replace(
+                /(.{300})..+/,
+                "$1..."
+              ))
+          );
           setIsLoaded(true);
           setFilms(result);
         },
@@ -38,7 +45,8 @@ const Home = () => {
               <Card
                 variant="outlined"
                 sx={{
-                  backgroundColor: randomColor(),
+                  height: "100%",
+                  backgroundColor: "#f7f7f7",
                   boxShadow: "2px 4px 25px rgba(0, 0, 0, .1)",
                   borderRadius: "12px",
                   transition: "all .2s linear",
@@ -48,17 +56,16 @@ const Home = () => {
                   },
                 }}
               >
+                <CardHeader
+                  sx={{
+                    backgroundColor: randomColor(),
+                    color: "#fff",
+                    ".MuiCardHeader-subheader": { color: "#fff" },
+                  }}
+                  title={film.title}
+                  subheader={film.original_title}
+                ></CardHeader>
                 <CardContent>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    {film.original_title}
-                  </Typography>
-                  <Typography variant="h5" component="div">
-                    {film.title}
-                  </Typography>
                   <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     {film.release_date} {"•"} Directed by {film.director}
                   </Typography>
