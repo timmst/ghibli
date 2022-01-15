@@ -105,9 +105,10 @@ const People = () => {
   const [cols, setCols] = useState(columns);
   const [selectedFilter, setSelectedFilter] = useState("All");
 
-  const options = {
-    filter: false,
-  };
+  // not needed for now
+  // const options = {
+  //   filter: false,
+  // };
 
   const onFilter = ({ target: { value } }) => {
     setSelectedFilter(value);
