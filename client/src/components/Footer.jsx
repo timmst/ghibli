@@ -4,7 +4,6 @@ import githubIcon from "../assets/github120.png";
 const FooterContainer = styled("div")({
   display: "flex",
   flexBasis: "70px",
-  // minHeight: "1vh",
   flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
@@ -16,7 +15,7 @@ const FooterContainer = styled("div")({
   backgroundColor: "#333333",
   fontSize: 20,
   fontFamily: "Roboto",
-  marginTop: "auto",
+  marginTop: "10px",
 });
 
 const Footer = () => {
