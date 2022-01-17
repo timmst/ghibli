@@ -4,7 +4,7 @@ Overview of all Studio Ghibli films
 
 # Demo
 
-Coming soon..
+(https://ghibli-view.herokuapp.com/)
 
 # API
 
