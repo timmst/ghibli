@@ -1,11 +1,14 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Grid, Card, CardContent, Typography } from "@mui/material";
+// import { useFetch } from "../utils/useFetch";
 
 const Locations = () => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [locations, setLocations] = useState([]);
+
+  // const movie = useFetch(props.row.films[0]);
 
   useEffect(() => {
     fetch("https://ghibliapi.herokuapp.com/locations")
