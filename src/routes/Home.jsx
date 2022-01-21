@@ -58,7 +58,6 @@ const Home = () => {
               >
                 <CardHeader
                   sx={{
-                    // backgroundColor: randomColor(),
                     background: randomColor(),
                     color: "#fff",
                     ".MuiCardHeader-subheader": { color: "#fff" },
