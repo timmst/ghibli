@@ -10,10 +10,12 @@ import {
   TablePagination,
   TableRow,
   Toolbar,
+  TextField,
+  IconButton,
 } from "@mui/material";
 import React, { useEffect, useState, useRef } from "react";
 import Person from "../components/Person";
-
+import SearchIcon from "@mui/icons-material/Search";
 const People = () => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -21,6 +23,7 @@ const People = () => {
   const [openModal, setOpenModal] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [query, setQuery] = useState("");
 
   const peopleRef = useRef([]);
   const filmsRef = useRef([]);
@@ -82,6 +85,9 @@ const People = () => {
     },
   ];
 
+  const [cols, setCols] = useState(columns);
+  const [selectedFilter, setSelectedFilter] = useState("All");
+
   const onMouseOver = (event) => {
     const el = event.target;
     el.style.color = "#1CAB73";
@@ -102,31 +108,37 @@ const People = () => {
     }
   };
 
-  const [cols, setCols] = useState(columns);
-  const [selectedFilter, setSelectedFilter] = useState("All");
-
-  // not needed for now
-  // const options = {
-  //   filter: false,
-  // };
-
   const onFilter = ({ target: { value } }) => {
-    setSelectedFilter(value);
     const filteredCols = [...cols];
     let filterList = [];
+
+    // default state
+    if (!value) {
+      selectedFilter ? (value = selectedFilter) : (value = "All");
+      setQuery("");
+    }
     if (value !== "All") {
       filterList = [value];
     }
-    // Target the column to filter on.
-    filteredCols[0].options.filterList = filterList;
-    setCols(filteredCols);
+    // select was clicked
+    if (value === "All" || filmsRef.current.some((e) => e.title === value)) {
+      setQuery("");
+      setSelectedFilter(value);
+      // Target the column to filter on.
+      filteredCols[0].options.filterList = filterList;
+      setCols(filteredCols);
+    } else {
+      // search bar was used
+      setQuery(value);
+    }
 
     // Go back to first page
     setPage(0);
 
     if (value === "All") {
       setPeople(peopleRef.current);
-    } else {
+    } else if (filmsRef.current.some((e) => e.title === value)) {
+      // select option was selected
       const filmId = filmsRef.current.filter(
         (film) => film.title === filterList[0]
       )[0].id;
@@ -154,6 +166,28 @@ const People = () => {
         setPeople(filteredPeople);
       }
       getPeople();
+    } else if (value) {
+      // search bar was used
+      let filteredRows;
+      // only search in selected film
+      if (selectedFilter !== "All") {
+        const peopleOfSelectedFilm = filmsRef.current.filter(
+          (film) => film.title === selectedFilter
+        )[0].people;
+
+        filteredRows = peopleRef.current.filter((person) => {
+          return (
+            person.name.toLowerCase().includes(value.toLowerCase()) &&
+            peopleOfSelectedFilm.includes(person.url)
+          );
+        });
+      } else {
+        // search in all films
+        filteredRows = peopleRef.current.filter((person) => {
+          return person.name.toLowerCase().includes(value.toLowerCase());
+        });
+      }
+      setPeople(filteredRows);
     }
   };
 
@@ -165,7 +199,6 @@ const People = () => {
       .then(async ([peopleResponse, filmsResponse]) => {
         const resolvedPeople = await peopleResponse.json(); // await response object from resolved request
         const resolvedFilms = await filmsResponse.json(); // .jsoon() is async and returns a promise with a resolved body content
-        // setFilms(resolvedFilms);
         filmsRef.current = resolvedFilms;
         setPeople(resolvedPeople);
         peopleRef.current = resolvedPeople;
@@ -173,7 +206,7 @@ const People = () => {
       })
       .then((responseText) => {
         setIsLoaded(true);
-        // console.log("responsetext", responseText); // contains array of people and films
+        // responseText contains array of people and films
       })
       .catch((err) => {
         setIsLoaded(true);
@@ -207,6 +240,25 @@ const People = () => {
                 </MenuItem>
               ))}
             </Select>
+            <TextField
+              fullWidth
+              label="Name"
+              id="nameQuery"
+              // onChange={(e) => setQuery(e.target.value)}
+              onChange={onFilter}
+              value={query}
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    type="submit"
+                    sx={{ p: "10px" }}
+                    aria-label="search"
+                  >
+                    <SearchIcon />
+                  </IconButton>
+                ),
+              }}
+            />
           </Toolbar>
           <TableContainer sx={{ height: "100%" }}>
             <Table stickyHeader aria-label="sticky table">
