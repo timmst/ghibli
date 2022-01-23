@@ -28,8 +28,10 @@ const People = () => {
   const peopleRef = useRef([]);
   const filmsRef = useRef([]);
   const rowData = useRef({});
+  const tableRef = useRef(null);
 
   const handleChangePage = (event, newPage) => {
+    window.scrollTo({ top: 0, behavior: "smooth" }); //scroll to the top of the page
     setPage(newPage);
   };
 
@@ -230,7 +232,14 @@ const People = () => {
           />
         )}
 
-        <Paper sx={{ width: "100%", overflow: "hidden" }}>
+        <Paper
+          sx={{
+            position: "absolute",
+            marginTop: "90px",
+            width: "100%",
+            overflow: "hidden",
+          }}
+        >
           <Toolbar sx={{ alignContent: "left" }}>
             <Select onChange={onFilter} value={selectedFilter}>
               <MenuItem value="All">All</MenuItem>
@@ -244,7 +253,6 @@ const People = () => {
               fullWidth
               label="Name"
               id="nameQuery"
-              // onChange={(e) => setQuery(e.target.value)}
               onChange={onFilter}
               value={query}
               InputProps={{
@@ -260,7 +268,12 @@ const People = () => {
               }}
             />
           </Toolbar>
-          <TableContainer sx={{ height: "100%" }}>
+          <TableContainer
+            ref={tableRef}
+            sx={{
+              overflow: "hidden",
+            }}
+          >
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
