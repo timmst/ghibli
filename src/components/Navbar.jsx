@@ -46,7 +46,7 @@ export default function Navbar() {
               },
             }}
           >
-            People
+            Characters
           </Link>
         </Toolbar>
       </AppBar>
